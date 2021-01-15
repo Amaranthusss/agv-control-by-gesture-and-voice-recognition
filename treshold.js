@@ -50,3 +50,5 @@ out.sum = whileData.reduce((a,b) => a + b, 0); //sum of all array's elements
 
 
 console.log(out);
+
+//O. Szkurłat based at R. Mnair
