@@ -22,7 +22,7 @@ for (let i = 0; i < windowedFrames.length; i++) //windowedFrames = [i][j]
 {
     whileData.push(0);
     for (let j = 0; j < windowedFrames[i].length; j++)
-        whileData[i] = Math.pow(windowedFrames[ i][j], 2) + whileData[i];
+        whileData[i] = Math.pow(windowedFrames[i][j], 2) + whileData[i];
 }
 
 //__________Sorting array by ASC__________
