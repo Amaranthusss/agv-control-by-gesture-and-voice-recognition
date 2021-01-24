@@ -1,49 +1,60 @@
-#2D array - [][]
-windowedFrames =  [
-    [5, 2, 4, 7, 2, 2],
-    [8, 5, 4, 7, 8, 4],
-    [6, 4, 8, 5, 1, 5],
-    [9, 5, 3, 4, 4, 1],
-    [6, 4, 2, 4, 4, 1],
-] #Simulated data
+import numpy as np
+import matplotlib.pyplot as plt
+import acquisition as acq
+#-------------------------------------------
+#            Treshold Detection
+#-------------------------------------------
 
-#__________Initialization output data__________
-class Out:
-    tresholdEnergy = 0
-    size = 0
-    summary = 0
-    booleanFrameEnergy = 0
-out = Out()
+def execute():
+    #__________While loop__________
+    for i in range(len(acq.data["framesMatrix"])):
+        acq.data["whileData"].append(0)
+        for j, jVal in enumerate(acq.data["framesMatrix"][i]):
+            acq.data["whileData"][i] = pow(acq.data["framesMatrix"][i][j],2) + acq.data["whileData"][i]
+    #__________Sorting array by ASC__________
+    whileToMean = []
+    for item in acq.data["whileData"]:
+        whileToMean.append(item)
+    whileToMean.sort()
+    idx = 14
+    maxIdx = idx
+    if idx > len(whileToMean):
+        maxIdx = len(whileToMean)
+    firstArray = []
+    for i in range(maxIdx):
+        firstArray.append(whileToMean[i])
+    #__________Estimate mean of firstArray__________
+    mean = sum(firstArray) / len(firstArray)
+    #__________Boolean frame energy__________
+    acq.data["tresholdEnergy"] = mean * 2000
+    for i in range(len(acq.data["whileData"])):
+        if acq.data["whileData"][i] > acq.data["tresholdEnergy"]:
+            acq.data["booleanFrameEnergy"].append(1)
+        else:
+            acq.data["booleanFrameEnergy"].append(0)
+            #This is true but there was required convert to int
+    #__________Finish rest of calculations__________
+    acq.data["size"] = len(acq.data["whileData"])
+    acq.data["summary"] = sum(acq.data["whileData"])
 
-#__________While loop__________
-whileData = []
-for i in range(len(windowedFrames)):
-    whileData.append(0)
-    for j, jVal in enumerate(windowedFrames[i]):
-        whileData[i] = pow(windowedFrames[i][j],2) + whileData[i]
-print(whileData)
+    #print(acq.data["out"].__dict__)
 
-#__________Sorting array by ASC__________
-whileData.sort()
-idx = 14
-maxIdx = idx
-if idx > len(whileData):
-    maxIdx = len(whileData)
-firstArray = []
-for i in range(maxIdx):
-    firstArray.append(whileData[i])
-#__________Estimate mean of firstArray__________
-mean = sum(firstArray) / len(firstArray)
-#__________Boolean frame energy__________
-out.tresholdEnergy = mean * 10
-for i in range(len(whileData)):
-    if whileData[i] > out.tresholdEnergy:
-        out.booleanFrameEnergy = 1
-        #This is true but there was required convert to int
-#__________Finish rest of calculations__________
-out.size = len(whileData)
-out.summary = sum(whileData)
-
-print(out.__dict__)
-
-#O. Szkurlat based at R. Mnair
+def plot():
+    #__________Energy Graph__________
+    x = np.arange(len(acq.data["whileData"]))
+    plt.figure()
+    plt.plot(x,acq.data["whileData"])
+    plt.plot([0, len(acq.data["whileData"])], [acq.data["tresholdEnergy"], acq.data["tresholdEnergy"]], '--', label='Treshold Energy')
+    plt.title("Energy Graph")
+    plt.ylabel("Amplitude")
+    plt.xlabel("Sample")
+    plt.legend()
+    plt.show()
+    #__________Boolean Energy Graph__________
+    x = np.arange(len(acq.data["booleanFrameEnergy"]))
+    plt.figure()
+    plt.plot(x,acq.data["booleanFrameEnergy"])
+    plt.title("Boolean Frame Energy")
+    plt.ylabel("Amplitude")
+    plt.xlabel("Sample")
+    plt.show()
