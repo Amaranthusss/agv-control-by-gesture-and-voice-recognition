@@ -21,9 +21,6 @@ def plotMedianFilter():
     plt.show()
 
 def findIndexes():
-    #Conclusion: results of filter mean for labview and python is different
-    #Unexpected negative edge inside graph is a problem
-    #so needed to find the last one negative edge (check more than 1).
     negativeEdges = []
     positiveEdges = []
     silent = False
@@ -48,7 +45,7 @@ def estimateTimes():
     print(acq.data["startTime"], acq.data["endTime"], acq.data["length"])
     if acq.data["startTime"] > acq.data["endTime"]: #It means command has been cut
         print("Command has been cut! Let's try again.")
-    elif acq.data["startTime"] == acq.data["endTime"]:
+    elif acq.data["startTime"] == acq.data["endTime"]: #Energy of speech was too low
         print("There is not any command. Expectancy...")
 
 

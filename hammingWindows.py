@@ -5,22 +5,22 @@ import acquisition as acq
 #-------------------------------------------
 #            Hamming Window Implementation
 #-------------------------------------------
-
 #This part was required because there's need to change 1D speech array into 2D array
+
 FRAME_SIZE = 0.02 #0.02 means 20 ms frames
-dt = 9.07029E-5 #ToDo: not sure why, lets find answer ;) anyway it's constant
+dt = 9.07029E-5
 
 
 def execute():
     frameLength = int(int(FRAME_SIZE / dt) * 0.75)
     forN = int((((len(acq.data["filtered"]) * dt) / FRAME_SIZE * 4) - 1 ) / 3 )
-    #Conclusion: forN is doubled because we now use doubled frequency acquisition, it looks fine
-    #print (frameLength, forN, int(FRAME_SIZE / dt))
+    #Conclusion: forN is doubled because when we use doubled frequency acquisition
 
     for i in range(forN):
-        acq.data["currHamming"] = [] #to show overall speech remove this and next line of code
+        #If you want to plot overall speech and results of Hamming window, comment 2 next lines of code
+        acq.data["currHamming"] = []
         acq.data["windowedHamming"] = []
-        currIdx = frameLength * i #should be equal something up to around 32670
+        currIdx = frameLength * i
         for j in range(currIdx, (currIdx + frameLength)):
             acq.data["currHamming"].append(acq.data["filtered"][j])
         window = np.hamming(len(acq.data["currHamming"])) 
@@ -29,8 +29,8 @@ def execute():
     
 def plot():
     plt.figure()
-    plt.plot(acq.data["currHamming"], label='Last Speech Frame') #this is the last one
-    plt.plot(acq.data["windowedHamming"], label='Hamming Windowed') #orange
+    plt.plot(acq.data["currHamming"], label='Last Speech Frame')
+    plt.plot(acq.data["windowedHamming"], label='Hamming Windowed')
     plt.title("Implementation of Hamming Window")
     plt.ylabel("Amplitude")
     plt.xlabel("Sample")

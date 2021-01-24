@@ -32,7 +32,6 @@ def execute():
             acq.data["booleanFrameEnergy"].append(1)
         else:
             acq.data["booleanFrameEnergy"].append(0)
-            #This is true but there was required convert to int
     #__________Finish rest of calculations__________
     acq.data["size"] = len(acq.data["whileData"])
     acq.data["summary"] = sum(acq.data["whileData"])
